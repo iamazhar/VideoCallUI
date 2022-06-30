@@ -73,6 +73,8 @@ class ViewController: UIViewController, VideoCallControllerDelegate {
     controller.view.layer.cornerCurve = .continuous
     controller.view.clipsToBounds = true
     controller.delegate = self
+    controller.smallVideoView.backgroundColor = .red
+    controller.view.backgroundColor = .blue
     return controller
   }()
 
