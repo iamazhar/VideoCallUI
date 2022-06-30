@@ -15,22 +15,26 @@ public final class ActiveCallActionButtonsView: UIStackView {
   public let endCallButton: UIButton = {
     let button = UIButton()
     button.tintColor = .systemRed
-    button.setImage(UIImage(systemName: "phone.down.fill")?.withTintColor(.systemRed, renderingMode: .alwaysTemplate), for: .normal)
+    button.setImage(UIImage(systemName: "phone.down.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 56.0, weight: UIImage.SymbolWeight.regular))?.withTintColor(.systemRed, renderingMode: .alwaysTemplate), for: .normal)
     return button
   }()
   
   public let audioButton: UIButton = {
     let button = UIButton()
     button.imageView?.tintColor = .white
-    button.setImage(UIImage(systemName: "mic"), for: .normal)
-    button.setImage(UIImage(systemName: "mic.slash"), for: .selected)
+    button.setImage(UIImage(systemName: "mic", withConfiguration: UIImage.SymbolConfiguration(pointSize: 56.0, weight: UIImage.SymbolWeight.regular)), for: .normal)
+    button.setImage(UIImage(systemName: "mic.slash", withConfiguration: UIImage.SymbolConfiguration(pointSize: 56.0, weight: UIImage.SymbolWeight.regular)), for: .selected)
     return button
   }()
   
   public let videoButton: UIButton = {
     let button = UIButton()
     button.imageView?.tintColor = .white
-    button.setImage(UIImage(systemName: "video"), for: .normal)
+    button.setImage(UIImage(
+      systemName: "video",
+      withConfiguration: UIImage.SymbolConfiguration(pointSize: 56.0, weight: UIImage.SymbolWeight.regular)
+    ), for: .normal)
+    
     button.setImage(UIImage(systemName: "video.slash"), for: .selected)
     return button
   }()
@@ -38,7 +42,10 @@ public final class ActiveCallActionButtonsView: UIStackView {
   public let cameraSwitchButton: UIButton = {
     let button = UIButton()
     button.imageView?.tintColor = .white
-    button.setImage(UIImage(systemName: "arrow.triangle.2.circlepath.camera.fill"), for: .normal)
+    button.setImage(UIImage(
+      systemName: "arrow.triangle.2.circlepath.camera.fill",
+      withConfiguration: UIImage.SymbolConfiguration(pointSize: 56.0, weight: UIImage.SymbolWeight.regular)
+    ), for: .normal)
     return button
   }()
   
