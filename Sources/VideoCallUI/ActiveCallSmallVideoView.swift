@@ -52,6 +52,8 @@ public final class ActiveCallSmallVideoView: UIView {
   override init(frame: CGRect) {
     super.init(frame: frame)
     
+    backgroundColor = .blue
+    
     layer.cornerRadius = 8.0
     clipsToBounds = true
     

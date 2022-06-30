@@ -147,7 +147,7 @@ public final class VideoCallController: UIViewController {
   public override func viewDidLoad() {
     super.viewDidLoad()
     
-    view.backgroundColor = .black
+    view.backgroundColor = .yellow
     
     view.addSubview(mainVideoView)
     mainVideoView.frame = view.frame
