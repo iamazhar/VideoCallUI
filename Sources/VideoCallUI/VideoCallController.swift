@@ -59,11 +59,11 @@ public final class VideoCallController: UIViewController {
   
   // MARK: - Animation properties
   public private(set) var isVideoViewSmall = false
-  private lazy var smallSize = CGSize(width: parent?.view.frame.width/3.5, height: parent?.view.frame.height/4.0)
+  private lazy var smallSize = CGSize(width: (parent?.view.frame.width ?? 100.0)/3.5, height: (parent?.view.frame.height ?? 100.0)/4.0)
   private lazy var smallOrigin = SmallVideoViewPosition.topRight(smallSize).origin
   
   private let bigOrigin: CGPoint = .zero
-  private lazy var bigSize = CGSize(width: parent?.view.frame.width, height: parent?.view.frame.height)
+  private lazy var bigSize = CGSize(width: parent?.view.frame.width ?? 200.0, height: parent?.view.frame.height ?? 200.0)
   private let cornerRadius: CGFloat = 16.0
   
   // MARK: - Subviews
