@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-public final class ActiveCallSmallVideoView: UIView {
+public final class SmallVideoView: UIView {
   
   // MARK: - Properties
   private let inactiveSymbolSize: CGSize = .init(width: 20.0, height: 16.0)
@@ -88,7 +88,4 @@ public final class ActiveCallSmallVideoView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
-  // MARK: - Methods
 }
-

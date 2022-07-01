@@ -39,26 +39,37 @@ public enum SmallVideoViewPosition {
 }
 
 public protocol VideoCallControllerDelegate: AnyObject {
-  func teleCallController(callController controller: VideoCallController, didTapBack tappedBack: Bool)
-  func teleCallController(callController controller: VideoCallController, didTapMainView: Bool)
+  func didTapBack(videoCallController: VideoCallController)
+  func didTapMainView(videoCallController: VideoCallController)
+  func didTapEndCall(videoCallController: VideoCallController)
+  func didTapFloatingCallView(videoCallController: VideoCallController)
+  func didTapCameraSwitchButton(videoCallController: VideoCallController)
+  func didTapCameraButton(videoCallController: VideoCallController)
+  func didTapMicButton(videoCallController: VideoCallController)
 }
 
 public final class VideoCallController: UIViewController {
   
   // MARK: - Properties
-  
   public weak var delegate: VideoCallControllerDelegate?
   
   public var didEndCall: (() -> Void)?
-  public var didJoinCall: (() -> Void)?
   
   public let smallVideoSize: CGSize = .init(width: 106.0, height: 174.0)
   
+  // MARK: - Animation properties
+  public private(set) var isVideoViewSmall = false
+  private lazy var smallSize = CGSize(width: view.frame.width/3.5, height: view.frame.height/4.0)
+  private lazy var smallOrigin = SmallVideoViewPosition.topRight(smallSize).origin
+  
+  private let bigOrigin: CGPoint = .zero
+  private lazy var bigSize = CGSize(width: view.frame.width, height: view.frame.height)
+  private let cornerRadius: CGFloat = 16.0
+  
   // MARK: - Subviews
+  public let activeCallActionButtonsView = VideoCallButtonsView()
   
-  public let activeCallActionButtonsView = ActiveCallActionButtonsView()
-  
-  public let callDetailsView = ActiveCallDetailsView()
+  public let callDetailsView = CallDetailsView()
   
   public lazy var backButton: UIButton = {
     let button = UIButton()
@@ -69,7 +80,7 @@ public final class VideoCallController: UIViewController {
   
   @objc
   private func handleBack() {
-    delegate?.teleCallController(callController: self, didTapBack: true)
+    animateCallViews()
   }
   
   public lazy var mainVideoView: UIView = {
@@ -79,7 +90,53 @@ public final class VideoCallController: UIViewController {
     return view
   }()
   
-  public var buttonsAreOnscreen = true
+  public private(set) var buttonsAreOnscreen = true
+  
+  public lazy var smallVideoView: SmallVideoView = {
+    let view = SmallVideoView()
+    view.isUserInteractionEnabled = true
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleSmallVideoViewTap))
+    view.addGestureRecognizer(tapGesture)
+    return view
+  }()
+  
+  public var isLocalSmall = true
+  
+  @objc
+  private func handleSmallVideoViewTap() {
+    isLocalSmall.toggle()
+    delegate?.didTapFloatingCallView(videoCallController: self)
+  }
+  
+  public override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    view.backgroundColor = .black
+    
+    view.addSubview(mainVideoView)
+    mainVideoView.frame = view.frame
+    
+    view.sendSubviewToBack(mainVideoView)
+    
+    setupActiveCallUI()
+    
+    let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+    view.addGestureRecognizer(panGesture)
+    view.layer.cornerCurve = .continuous
+    view.clipsToBounds = true
+    
+    /// End call
+    activeCallActionButtonsView.endCallButton.addTarget(self, action: #selector(handleCallEnded), for: .touchUpInside)
+    /// Audio button
+    activeCallActionButtonsView.audioButton.addTarget(self, action: #selector(handleAudio), for: .touchUpInside)
+    /// Video Button
+    activeCallActionButtonsView.videoButton.addTarget(self, action: #selector(handleVideo), for: .touchUpInside)
+    /// Switch Camera
+    activeCallActionButtonsView.cameraSwitchButton.addTarget(self, action: #selector(handleCameraSwitch), for: .touchUpInside)
+    
+  }
+  
+  // MARK: - Methods
   
   private func animateCallButtons(
     withOffset offset: CGFloat,
@@ -101,6 +158,36 @@ public final class VideoCallController: UIViewController {
       completion: nil)
   }
   
+  private func animateCallViews() {
+    UIView.animate(
+      withDuration: 0.4,
+      delay: 0.0,
+      usingSpringWithDamping: 1.0,
+      initialSpringVelocity: 1.0,
+      options: .curveEaseInOut
+    ) {
+      let newFrame = self.isVideoViewSmall ?
+      CGRect(origin: self.bigOrigin, size: self.bigSize) :
+      CGRect(origin: self.smallOrigin, size: self.smallSize)
+      
+      self.view.frame = newFrame
+      self.mainVideoView.frame.size = newFrame.size
+      
+      self.view.layer.cornerRadius = self.isVideoViewSmall ? 0.0 : self.cornerRadius
+      
+      self.isVideoViewSmall.toggle()
+      
+      self.updateCallViews(isHidden: self.isVideoViewSmall)
+      
+    } completion: { (_) in
+      if self.isVideoViewSmall {
+        self.delegate?.didTapMainView(videoCallController: self)        
+      } else {
+        self.delegate?.didTapBack(videoCallController: self)
+      }
+    }
+  }
+  
   @objc
   private func handleLargeVideoViewTap() {
     if buttonsAreOnscreen {
@@ -110,69 +197,65 @@ public final class VideoCallController: UIViewController {
       animateCallButtons(withOffset: -40.0, withAlpha: 1.0)
       buttonsAreOnscreen = true
     }
-    delegate?.teleCallController(callController: self, didTapMainView: true)
+    
+    guard isVideoViewSmall else { return }
+    
+    animateCallViews()
   }
-  
-  public lazy var smallVideoView: ActiveCallSmallVideoView = {
-    let view = ActiveCallSmallVideoView()
-    view.isUserInteractionEnabled = true
-    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleSmallVideoViewTap))
-    view.addGestureRecognizer(tapGesture)
-    return view
-  }()
-  
-  public var isLocalSmall = true
   
   @objc
-  private func handleSmallVideoViewTap() {
-    isLocalSmall.toggle()
+  private func handlePan(_ gesture: UIPanGestureRecognizer) {
+    guard isVideoViewSmall else { return }
     
-    // TODO: - call a closure
+    let translation = gesture.translation(in: view)
     
-//    if isLocalSmall {
-//      localVideoCanvas.view = mainVideoView
-//      remoteVideoCanvas.view = smallVideoView
-//      isLocalSmall = false
-//    } else {
-//      localVideoCanvas.view = smallVideoView
-//      remoteVideoCanvas.view = mainVideoView
-//      isLocalSmall = true
-//    }
+    guard let gestureView = gesture.view else {
+      return
+    }
+    
+    gestureView.center = CGPoint(
+      x: gestureView.center.x + translation.x,
+      y: gestureView.center.y + translation.y
+    )
+    
+    let viewX = gestureView.center.x
+    let viewY = gestureView.center.y
+    
+    var snapOrigin = CGPoint()
+    
+    if viewX >= view.center.x && viewY >= view.center.y {
+      snapOrigin = SmallVideoViewPosition.bottomRight(gestureView.frame.size).origin
+    } else if viewX >= view.center.x && viewY <= view.center.y {
+      snapOrigin = SmallVideoViewPosition.topRight(gestureView.frame.size).origin
+    } else if viewX <= view.center.x && viewY >= view.center.y {
+      snapOrigin = SmallVideoViewPosition.bottomLeft(gestureView.frame.size).origin
+    } else if viewX <= view.center.x && viewY <= view.center.y {
+      snapOrigin = SmallVideoViewPosition.topLeft.origin
+    }
+    
+    gesture.setTranslation(.zero, in: self.view)
+    self.smallOrigin = snapOrigin
+    
+    if gesture.state == .ended {
+      UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 1.0, options: .curveEaseInOut) {
+        gestureView.frame.origin = snapOrigin
+      } completion: { _ in
+        self.smallOrigin = snapOrigin
+      }
+    }
   }
   
-  private func showPermissionsAlert() {
-    // TODO: -  call closure
+  private func updateCallViews(isHidden hidden: Bool) {
+    activeCallActionButtonsView.isHidden = hidden
+    backButton.isHidden = hidden
+    callDetailsView.isHidden = hidden
+    smallVideoView.isHidden = hidden
   }
-  
-  public override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    view.backgroundColor = .black
-    
-    view.addSubview(mainVideoView)
-    mainVideoView.frame = view.frame
-
-    view.sendSubviewToBack(mainVideoView)
-    
-    setupActiveCallUI()
-    
-    /// End call
-    activeCallActionButtonsView.endCallButton.addTarget(self, action: #selector(handleCallEnded), for: .touchUpInside)
-    /// Audio button
-    activeCallActionButtonsView.audioButton.addTarget(self, action: #selector(handleAudio), for: .touchUpInside)
-    /// Video Button
-    activeCallActionButtonsView.videoButton.addTarget(self, action: #selector(handleVideo), for: .touchUpInside)
-    /// Switch Camera
-    activeCallActionButtonsView.cameraSwitchButton.addTarget(self, action: #selector(handleCameraSwitch), for: .touchUpInside)
-    
-  }
-  
-  // MARK: - Methods
   
   @objc
   private func handleCameraSwitch(_ sender: UIButton) {
     sender.isSelected.toggle()
-    // TODO: -  call closure
+    delegate?.didTapCameraSwitchButton(videoCallController: self)
   }
   
   @objc
@@ -185,7 +268,7 @@ public final class VideoCallController: UIViewController {
       smallVideoView.blurView.isHidden = true
     }
     
-    // TODO: - call closure
+    delegate?.didTapCameraButton(videoCallController: self)
   }
   
   @objc
@@ -198,13 +281,12 @@ public final class VideoCallController: UIViewController {
       smallVideoView.audioInactiveImageView.isHidden = true
     }
     
-    // TODO: -  call closure
+    delegate?.didTapMicButton(videoCallController: self)
   }
   
   @objc
   private func handleCallEnded() {
-    didEndCall?()
-//    UIApplication.shared.isIdleTimerDisabled = false
+    self.delegate?.didTapEndCall(videoCallController: self)
   }
   
   private func setupActiveCallUI() {

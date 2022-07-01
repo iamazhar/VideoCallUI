@@ -8,8 +8,7 @@
 import UIKit
 import SnapKit
 
-public final class ActiveCallActionButtonsView: UIStackView {
-  // MARK: - Properties
+public final class VideoCallButtonsView: UIStackView {
 
   // MARK: - Subviews
   public let endCallButton: UIButton = {

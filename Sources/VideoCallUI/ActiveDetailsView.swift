@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-public final class ActiveCallDetailsView: UIStackView {
+public final class CallDetailsView: UIStackView {
   
   // MARK: - Properties
   private let elapsedTimeContainerSize: CGSize = .init(width: 69.0, height: 28.0)
@@ -70,8 +70,8 @@ public final class ActiveCallDetailsView: UIStackView {
     setupSubviews()
   }
   
+  // MARK: - Methods
   private func setupSubviews() {
-    // Doc details
     detailsStackView.addArrangedSubview(nameLabel)
     
     detailsStackView.addArrangedSubview(mutedImageView)
@@ -109,7 +109,4 @@ public final class ActiveCallDetailsView: UIStackView {
   required init(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
-  // MARK: - Methods
 }
-
