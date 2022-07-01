@@ -8,7 +8,7 @@
 import UIKit
 import VideoCallUI
 
-class ViewController: UIViewController, VideoCallControllerDelegate {
+final class ViewController: UIViewController {
   
   // MARK: - Child controllers
   private lazy var videoCallController: VideoCallController = {
@@ -22,7 +22,7 @@ class ViewController: UIViewController, VideoCallControllerDelegate {
     
     return controller
   }()
-
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .white
@@ -30,6 +30,35 @@ class ViewController: UIViewController, VideoCallControllerDelegate {
   }
 }
 
+extension ViewController: VideoCallControllerDelegate {
+  func didTapBack(videoCallController: VideoCallController) {
+    /// Do something
+  }
+  
+  func didTapMainView(videoCallController: VideoCallController) {
+    /// Do something
+  }
+  
+  func didTapEndCall(videoCallController: VideoCallController) {
+    /// Do something
+  }
+  
+  func didTapFloatingCallView(videoCallController: VideoCallController) {
+    /// Do something
+  }
+  
+  func didTapCameraSwitchButton(videoCallController: VideoCallController) {
+    /// Do something
+  }
+  
+  func didTapCameraButton(videoCallController: VideoCallController) {
+    /// Do something
+  }
+  
+  func didTapMicButton(videoCallController: VideoCallController) {
+    /// Do something
+  }
+}
 
 @nonobjc extension UIViewController {
   
@@ -46,11 +75,5 @@ class ViewController: UIViewController, VideoCallControllerDelegate {
     
     view.addSubview(child.view)
     child.didMove(toParent: self)
-  }
-  
-  func remove() {
-    willMove(toParent: nil)
-    view.removeFromSuperview()
-    removeFromParent()
   }
 }
