@@ -205,9 +205,11 @@ public final class VideoCallController: UIViewController {
   
   @objc
   private func handlePan(_ gesture: UIPanGestureRecognizer) {
-    guard isVideoViewSmall else { return }
+    guard isVideoViewSmall,
+          let parent = parent
+    else { return }
     
-    let translation = gesture.translation(in: view)
+    let translation = gesture.translation(in: parent.view)
     
     guard let gestureView = gesture.view else {
       return
@@ -223,17 +225,17 @@ public final class VideoCallController: UIViewController {
     
     var snapOrigin = CGPoint()
     
-    if viewX >= view.center.x && viewY >= view.center.y {
+    if viewX >= parent.view.center.x && viewY >= parent.view.center.y {
       snapOrigin = SmallVideoViewPosition.bottomRight(gestureView.frame.size).origin
-    } else if viewX >= view.center.x && viewY <= view.center.y {
+    } else if viewX >= parent.view.center.x && viewY <= parent.view.center.y {
       snapOrigin = SmallVideoViewPosition.topRight(gestureView.frame.size).origin
-    } else if viewX <= view.center.x && viewY >= view.center.y {
+    } else if viewX <= parent.view.center.x && viewY >= parent.view.center.y {
       snapOrigin = SmallVideoViewPosition.bottomLeft(gestureView.frame.size).origin
-    } else if viewX <= view.center.x && viewY <= view.center.y {
+    } else if viewX <= parent.view.center.x && viewY <= parent.view.center.y {
       snapOrigin = SmallVideoViewPosition.topLeft.origin
     }
     
-    gesture.setTranslation(.zero, in: self.view)
+    gesture.setTranslation(.zero, in: parent.view)
     self.smallOrigin = snapOrigin
     
     if gesture.state == .ended {
