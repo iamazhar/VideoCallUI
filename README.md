@@ -101,8 +101,8 @@ VideoCallController is released under the MIT license. See [LICENSE](LICENSE) fo
 
 # Contribute
 
-We would love for you to contribute to VideoCallController, check the "Contributing" section and send us your pull request.
+I would love for you to contribute to VideoCallController, send me your pull request.
 
 # Let us know
 
-We’d be really happy if you sent us links to your projects where you use our component. Just send an email to azharcodes[at]gmail.com and do let us know if you have any questions or suggestion.
+I’d be really happy if you sent me links to your projects where you use our component. Just send an email to azharcodes[at]gmail.com and do let me know if you have any questions or suggestion.
