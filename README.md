@@ -2,7 +2,9 @@
 
 A customizable, easy-to-use iOS library to create video call interfaces in your Swift applications.
 
-<img src="preview.gif" width="250">
+<div align="center">
+    <img src="preview.gif" width="250">
+</div>
 
 VideoCallController is a UIViewController subclass that provides a user interface for video calling, designed to be easy to open in full-screen or as a call screen with minimised mode. The controller has a variety of delegate methods for video call events and customisable UI elements.
 
