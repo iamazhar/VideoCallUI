@@ -96,7 +96,7 @@ For more usage examples, please see the Example folder.
 
 # License
 
-VideoCallController is released under the MIT license. See LICENSE for details.
+VideoCallController is released under the MIT license. See [LICENSE](LICENSE) for details.
 
 # Contribute
 
