@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-public final class CallDetailsView: UIStackView {
+public class CallDetailsView: UIStackView {
   
   // MARK: - Properties
   private let elapsedTimeContainerSize: CGSize = .init(width: 69.0, height: 28.0)

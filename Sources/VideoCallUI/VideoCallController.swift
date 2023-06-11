@@ -48,7 +48,7 @@ public protocol VideoCallControllerDelegate: AnyObject {
   func didTapMicButton(videoCallController: VideoCallController)
 }
 
-public final class VideoCallController: UIViewController {
+public class VideoCallController: UIViewController {
   
   // MARK: - Properties
   public weak var delegate: VideoCallControllerDelegate?

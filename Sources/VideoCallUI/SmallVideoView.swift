@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-public final class SmallVideoView: UIView {
+public class SmallVideoView: UIView {
   
   // MARK: - Properties
   private let inactiveSymbolSize: CGSize = .init(width: 20.0, height: 16.0)
