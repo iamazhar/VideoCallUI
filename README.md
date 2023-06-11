@@ -26,13 +26,14 @@ UIKit
 
 # Installation
 
-VideoCallController is available through Swift Package Manager. To install it into your project:
+VideoCallController is available through Swift Package Manager. 
+To install it into your project:
 
-In Xcode, select "File" -> "Swift Packages" -> "Add Package Dependency"
-In the search bar, enter the following URL: https://github.com/iamazhar/VideoCallUI
-Click "Next", then select the version you want (usually the project defaults to the latest version).
-Click "Next" again to confirm, then click "Finish" to add the VideoCallController package to your project.
-After successful installation, import VideoCallController to your file as shown below:
+1. In Xcode, select "File" -> "Swift Packages" -> "Add Package Dependency"
+2. In the search bar, enter the following URL: https://github.com/iamazhar/VideoCallUI
+3. Click "Next", then select the version you want (usually the project defaults to the latest version).
+4. Click "Next" again to confirm, then click "Finish" to add the VideoCallController package to your project.
+5. After successful installation, import VideoCallController to your file as shown below:
 
 ```swift
 import VideoCallUI
