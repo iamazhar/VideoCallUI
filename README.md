@@ -45,13 +45,7 @@ After installing the library, import it wherever you want to use it:
 ```swift
 import VideoCallUI
 ```
-
-Instantiate the VideoCallController and present it:
-
-```swift
-let videoCallController = VideoCallController()
-present(videoCallController, animated: true, completion: nil)
-```
+Add the VideoCallController as a child controller to your target controller.
 
 Implement VideoCallControllerDelegate to handle call events:
 
