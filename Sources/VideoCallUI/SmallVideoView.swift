@@ -9,45 +9,45 @@ import UIKit
 import SnapKit
 
 public class SmallVideoView: UIView {
-  
-  // MARK: - Properties
-  private let inactiveSymbolSize: CGSize = .init(width: 20.0, height: 16.0)
-  
-  // MARK: - Subviews
-  public let videoView = UIView()
-  
-  public let audioInactiveImageView: UIImageView = {
-    let view = UIImageView(image: UIImage(systemName: "mic.slash"))
-    view.tintColor = .white
-    view.isHidden = true
-    view.contentMode = .scaleAspectFit
-    return view
-  }()
-  
-  public let videoInactiveImageVIew: UIImageView = {
-    let view = UIImageView(image: UIImage(systemName: "video.slash"))
-    view.tintColor = .white
-    view.isHidden = true
-    view.contentMode = .scaleAspectFit
-    return view
-  }()
-  
-  private let inactiveStackView: UIStackView = {
-    let view = UIStackView()
-    view.axis = .horizontal
-    view.distribution = .fillEqually
-    view.spacing = 16.0
-    view.alignment = .center
-    return view
-  }()
-  
-  private let blurEffect = UIBlurEffect(style: .light)
-  public lazy var blurView: UIVisualEffectView  = {
-    let view = UIVisualEffectView(effect: blurEffect)
-    view.isHidden = true
-    return view
-  }()
-  
+    
+    // MARK: - Properties
+    private let inactiveSymbolSize: CGSize = .init(width: 20.0, height: 16.0)
+    
+    // MARK: - Subviews
+    public let videoView = UIView()
+    
+    public let audioInactiveImageView: UIImageView = {
+        let view = UIImageView(image: UIImage(systemName: "mic.slash"))
+        view.tintColor = .white
+        view.isHidden = true
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
+    
+    public let videoInactiveImageVIew: UIImageView = {
+        let view = UIImageView(image: UIImage(systemName: "video.slash"))
+        view.tintColor = .white
+        view.isHidden = true
+        view.contentMode = .scaleAspectFit
+        return view
+    }()
+    
+    private let inactiveStackView: UIStackView = {
+        let view = UIStackView()
+        view.axis = .horizontal
+        view.distribution = .fillEqually
+        view.spacing = 16.0
+        view.alignment = .center
+        return view
+    }()
+    
+    private let blurEffect = UIBlurEffect(style: .light)
+    public lazy var blurView: UIVisualEffectView  = {
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.isHidden = true
+        return view
+    }()
+    
     // MARK: - init
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -96,9 +96,9 @@ public class SmallVideoView: UIView {
         
         sendSubviewToBack(videoView)
     }
-
-  
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+    
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
