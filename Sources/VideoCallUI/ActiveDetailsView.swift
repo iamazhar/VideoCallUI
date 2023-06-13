@@ -70,41 +70,52 @@ public class CallDetailsView: UIStackView {
     setupSubviews()
   }
   
-  // MARK: - Methods
-  private func setupSubviews() {
-    detailsStackView.addArrangedSubview(nameLabel)
-    
-    detailsStackView.addArrangedSubview(mutedImageView)
-    mutedImageView.snp.makeConstraints { make in
-      make.height.equalTo(16.0)
-      make.width.equalTo(20.0)
+    // MARK: - Methods
+    private func setupSubviews() {
+      detailsStackView.addArrangedSubview(nameLabel)
+      
+      detailsStackView.addArrangedSubview(mutedImageView)
+      
+      mutedImageView.translatesAutoresizingMaskIntoConstraints = false
+      NSLayoutConstraint.activate([
+          mutedImageView.heightAnchor.constraint(equalToConstant: 16.0),
+          mutedImageView.widthAnchor.constraint(equalToConstant: 20.0)
+      ])
+      
+      detailsContainerView.addSubview(detailsStackView)
+      
+      detailsStackView.translatesAutoresizingMaskIntoConstraints = false
+      NSLayoutConstraint.activate([
+          detailsStackView.centerXAnchor.constraint(equalTo: detailsContainerView.centerXAnchor),
+          detailsStackView.centerYAnchor.constraint(equalTo: detailsContainerView.centerYAnchor),
+          detailsStackView.leadingAnchor.constraint(equalTo: detailsContainerView.leadingAnchor, constant: 12.0),
+          detailsStackView.trailingAnchor.constraint(equalTo: detailsContainerView.trailingAnchor, constant: -12.0)
+      ])
+      
+      addArrangedSubview(detailsContainerView)
+      
+      addArrangedSubview(spacerView)
+      
+      /// Elapsed time
+      elapsedTimeContainerView.addSubview(elapsedTimeLabel)
+      
+      elapsedTimeLabel.translatesAutoresizingMaskIntoConstraints = false
+      NSLayoutConstraint.activate([
+          elapsedTimeLabel.centerXAnchor.constraint(equalTo: elapsedTimeContainerView.centerXAnchor),
+          elapsedTimeLabel.centerYAnchor.constraint(equalTo: elapsedTimeContainerView.centerYAnchor),
+          elapsedTimeLabel.heightAnchor.constraint(equalToConstant: elapsedTimeLabel.intrinsicContentSize.height),
+          elapsedTimeLabel.widthAnchor.constraint(equalToConstant: elapsedTimeLabel.intrinsicContentSize.width)
+      ])
+      
+      addArrangedSubview(elapsedTimeContainerView)
+      
+      elapsedTimeContainerView.translatesAutoresizingMaskIntoConstraints = false
+      NSLayoutConstraint.activate([
+          elapsedTimeContainerView.widthAnchor.constraint(equalToConstant: elapsedTimeContainerSize.width),
+          elapsedTimeContainerView.heightAnchor.constraint(equalToConstant: elapsedTimeContainerSize.height)
+      ])
     }
-    
-    detailsContainerView.addSubview(detailsStackView)
-    detailsStackView.snp.makeConstraints { make in
-      make.center.equalTo(detailsContainerView)
-      make.leading.equalTo(detailsContainerView).offset(12.0)
-      make.trailing.equalTo(detailsContainerView).offset(-12.0)
-    }
-    
-    addArrangedSubview(detailsContainerView)
-    
-    addArrangedSubview(spacerView)
-    
-    /// Elapsed time
-    elapsedTimeContainerView.addSubview(elapsedTimeLabel)
-    elapsedTimeLabel.snp.makeConstraints { make in
-      make.center.equalTo(elapsedTimeContainerView)
-      make.height.equalTo(elapsedTimeLabel.intrinsicContentSize.height)
-      make.width.equalTo(elapsedTimeLabel.intrinsicContentSize.width)
-    }
-    
-    addArrangedSubview(elapsedTimeContainerView)
-    elapsedTimeContainerView.snp.makeConstraints { make in
-      make.width.equalTo(elapsedTimeContainerSize.width)
-      make.height.equalTo(elapsedTimeContainerSize.height)
-    }
-  }
+
   
   required init(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")

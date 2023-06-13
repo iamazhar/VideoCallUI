@@ -56,6 +56,8 @@ public class VideoCallController: UIViewController {
   public var didEndCall: (() -> Void)?
   
   public let smallVideoSize: CGSize = .init(width: 106.0, height: 174.0)
+    
+    private var activeCallActionButtonsViewBottomConstraint: NSLayoutConstraint?
   
   // MARK: - Animation properties
   public private(set) var isVideoViewSmall = false
@@ -138,25 +140,23 @@ public class VideoCallController: UIViewController {
   
   // MARK: - Methods
   
-  private func animateCallButtons(
-    withOffset offset: CGFloat,
-    withAlpha alpha: CGFloat
-  ) {
-    UIView.animate(
-      withDuration: 0.4,
-      delay: 0.0,
-      usingSpringWithDamping: 1.0,
-      initialSpringVelocity: 1.0,
-      options: .curveEaseInOut,
-      animations: {
-        self.activeCallActionButtonsView.snp.updateConstraints { make in
-          make.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(offset)
-        }
-        self.activeCallActionButtonsView.alpha = alpha
-        self.view.layoutIfNeeded()
-      },
-      completion: nil)
-  }
+    private func animateCallButtons(
+        withOffset offset: CGFloat,
+        withAlpha alpha: CGFloat
+      ) {
+        activeCallActionButtonsViewBottomConstraint?.constant = offset
+        UIView.animate(
+          withDuration: 0.4,
+          delay: 0.0,
+          usingSpringWithDamping: 1.0,
+          initialSpringVelocity: 1.0,
+          options: .curveEaseInOut,
+          animations: {
+            self.activeCallActionButtonsView.alpha = alpha
+            self.view.layoutIfNeeded()
+          },
+          completion: nil)
+    }
   
   private func animateCallViews() {
     UIView.animate(
@@ -290,38 +290,45 @@ public class VideoCallController: UIViewController {
   private func handleCallEnded() {
     self.delegate?.didTapEndCall(videoCallController: self)
   }
-  
-  private func setupActiveCallUI() {
-    view.addSubview(activeCallActionButtonsView)
-    activeCallActionButtonsView.snp.makeConstraints { make in
-      make.centerX.equalTo(view)
-      make.leading.equalTo(view).offset(24.0)
-      make.trailing.equalTo(view).offset(-24.0)
-      make.height.equalTo(56.0)
-      make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-40.0)
+
+    private func setupActiveCallUI() {
+        view.addSubview(activeCallActionButtonsView)
+        activeCallActionButtonsView.translatesAutoresizingMaskIntoConstraints = false
+        activeCallActionButtonsViewBottomConstraint = activeCallActionButtonsView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40.0)
+        NSLayoutConstraint.activate([
+            activeCallActionButtonsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activeCallActionButtonsView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24.0),
+            activeCallActionButtonsView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24.0),
+            activeCallActionButtonsView.heightAnchor.constraint(equalToConstant: 56.0),
+            activeCallActionButtonsViewBottomConstraint!
+        ])
+        
+        view.addSubview(backButton)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8.0),
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            backButton.widthAnchor.constraint(equalToConstant: 44.0),
+            backButton.heightAnchor.constraint(equalToConstant: 44.0)
+        ])
+        
+        view.addSubview(callDetailsView)
+        callDetailsView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            callDetailsView.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 16.0),
+            callDetailsView.heightAnchor.constraint(equalToConstant: 30.0),
+            callDetailsView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16.0),
+            callDetailsView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16.0)
+        ])
+        
+        view.addSubview(smallVideoView)
+        smallVideoView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            smallVideoView.heightAnchor.constraint(equalToConstant: smallVideoSize.height),
+            smallVideoView.widthAnchor.constraint(equalToConstant: smallVideoSize.width),
+            smallVideoView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24.0),
+            smallVideoView.bottomAnchor.constraint(equalTo: activeCallActionButtonsView.topAnchor, constant: -24.0)
+        ])
     }
-    
-    view.addSubview(backButton)
-    backButton.snp.makeConstraints { make in
-      make.leading.equalTo(view.safeAreaLayoutGuide).offset(8.0)
-      make.top.equalTo(view.safeAreaLayoutGuide)
-      make.width.height.equalTo(44.0)
-    }
-    
-    view.addSubview(callDetailsView)
-    callDetailsView.snp.makeConstraints { make in
-      make.top.equalTo(backButton.snp.bottom).offset(16.0)
-      make.height.equalTo(30.0)
-      make.leading.equalTo(view.safeAreaLayoutGuide).offset(16.0)
-      make.trailing.equalTo(view.safeAreaLayoutGuide).offset(-16.0)
-    }
-    
-    view.addSubview(smallVideoView)
-    smallVideoView.snp.makeConstraints { make in
-      make.height.equalTo(smallVideoSize.height)
-      make.width.equalTo(smallVideoSize.width)
-      make.leading.equalTo(view).offset(24.0)
-      make.bottom.equalTo(activeCallActionButtonsView.snp.top).offset(-24.0)
-    }
-  } 
+
 }

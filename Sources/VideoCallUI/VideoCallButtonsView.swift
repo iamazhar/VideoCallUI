@@ -64,28 +64,36 @@ public class VideoCallButtonsView: UIStackView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  // MARK: - Methods
-  private func setupSubviews() {
-    addArrangedSubview(endCallButton)
-    endCallButton.snp.makeConstraints { make in
-      make.width.height.equalTo(56.0)
+    // MARK: - Methods
+    private func setupSubviews() {
+        addArrangedSubview(endCallButton)
+        endCallButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            endCallButton.widthAnchor.constraint(equalToConstant: 56.0),
+            endCallButton.heightAnchor.constraint(equalToConstant: 56.0)
+        ])
+        
+        addArrangedSubview(audioButton)
+        audioButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            audioButton.widthAnchor.constraint(equalToConstant: 56.0),
+            audioButton.heightAnchor.constraint(equalToConstant: 56.0)
+        ])
+        
+        addArrangedSubview(videoButton)
+        videoButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            videoButton.widthAnchor.constraint(equalToConstant: 56.0),
+            videoButton.heightAnchor.constraint(equalToConstant: 56.0)
+        ])
+        
+        addArrangedSubview(cameraSwitchButton)
+        cameraSwitchButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cameraSwitchButton.widthAnchor.constraint(equalToConstant: 56.0),
+            cameraSwitchButton.heightAnchor.constraint(equalToConstant: 56.0)
+        ])
     }
-    
-    addArrangedSubview(audioButton)
-    audioButton.snp.makeConstraints { make in
-      make.width.height.equalTo(56.0)
-    }
-    
-    addArrangedSubview(videoButton)
-    videoButton.snp.makeConstraints { make in
-      make.width.height.equalTo(56.0)
-    }
-    
-    addArrangedSubview(cameraSwitchButton)
-    cameraSwitchButton.snp.makeConstraints { make in
-      make.width.height.equalTo(56.0)
-    }
-    
-  }
+
 }
 
